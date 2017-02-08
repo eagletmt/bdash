@@ -27,11 +27,21 @@ export default class Editor extends React.Component {
     this.codeMirror.setValue(this.currentValue);
     CodeMirror.Vim.defineAction('indent', cm => cm.indentLine(cm.getCursor().line, 'add'));
     CodeMirror.Vim.defineAction('unindent', cm => cm.indentLine(cm.getCursor().line, 'subtract'));
-    CodeMirror.Vim.defineAction('delLineLeft', cm => cm.execCommand('delLineLeft'));
+    for (let cmd of ['delLineLeft', 'delCharBefore', 'delWordBefore', 'goLineStart', 'goLineEnd', 'goCharRight', 'goCharLeft', 'insertSoftTab', 'newlineAndIndent']) {
+      CodeMirror.Vim.defineAction(cmd, cm => cm.execCommand(cmd));
+    }
     CodeMirror.Vim.map('<C-j>', '<Esc>', 'insert');
     CodeMirror.Vim._mapCommand({ keys: '<C-t>', type: 'action', action: 'indent', context: 'insert' });
     CodeMirror.Vim._mapCommand({ keys: '<C-d>', type: 'action', action: 'unindent', context: 'insert' });
     CodeMirror.Vim._mapCommand({ keys: '<C-u>', type: 'action', action: 'delLineLeft', context: 'insert' });
+    CodeMirror.Vim._mapCommand({ keys: '<C-h>', type: 'action', action: 'delCharBefore', context: 'insert' });
+    CodeMirror.Vim._mapCommand({ keys: '<C-w>', type: 'action', action: 'delWordBefore', context: 'insert' });
+    CodeMirror.Vim._mapCommand({ keys: '<C-a>', type: 'action', action: 'goLineStart', context: 'insert' });
+    CodeMirror.Vim._mapCommand({ keys: '<C-e>', type: 'action', action: 'goLineEnd', context: 'insert' });
+    CodeMirror.Vim._mapCommand({ keys: '<C-f>', type: 'action', action: 'goCharRight', context: 'insert' });
+    CodeMirror.Vim._mapCommand({ keys: '<C-b>', type: 'action', action: 'goCharLeft', context: 'insert' });
+    CodeMirror.Vim._mapCommand({ keys: '<C-i>', type: 'action', action: 'insertSoftTab', context: 'insert' });
+    CodeMirror.Vim._mapCommand({ keys: '<C-m>', type: 'action', action: 'newlineAndIndent', context: 'insert' });
   }
 
   componentWillUnmount() {
